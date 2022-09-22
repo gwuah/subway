@@ -19,6 +19,7 @@ anyhow = "1.0"
 thiserror = "1.0"
 futures = "0.3"
 libc = "0.2"
+tokio-tun = "0.7.0"
 
 [target.x86_64-unknown-linux-musl]
 linker = "x86_64-linux-musl-gcc"

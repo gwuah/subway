@@ -1,5 +1,5 @@
 # Subway 🚅
-Subway is a layer-3(IP) tunneling sofware. It routes all your internet traffic through an exit-node, just like how traditional vpns work, except this time, you decide the exit node. 
+Subway is a layer-3(IP) tunneling sofware. It routes all your internet traffic through an exit-node, just like how traditional vpns work, except this time, you own the exit node. 
 
 # Map
 - demo - contains a simple tcp proxy that communicates over the tunnel.
