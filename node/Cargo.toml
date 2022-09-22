@@ -1,0 +1,24 @@
+[package]
+name = "subway"
+version = "0.1.0"
+edition = "2021"
+
+[net]
+git-fetch-with-cli = true
+
+[[bin]]
+name = "client"
+
+[[bin]]
+name = "server"
+
+[dependencies]
+tokio = { version = "1.20.1", features = ["full"] }
+clap = { version = "3.2.16", features = ["derive"] }
+anyhow = "1.0"
+thiserror = "1.0"
+futures = "0.3"
+libc = "0.2"
+
+[target.x86_64-unknown-linux-musl]
+linker = "x86_64-linux-musl-gcc"
