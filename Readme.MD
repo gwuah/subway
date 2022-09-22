@@ -1,13 +1,15 @@
 # Subway 🚅
-Subway is a layer-3(IP) tunneling sofware. It routes all your internet traffic through an exit-node, just like how traditional vpns work, except this time, you own the exit node. 
+Subway is a layer-3(IP) tunneling sofware that routes your internet traffic through an exit-node of your choice. Just like how traditional vpns work, except this time, you own the exit node. You can also add encryption, disable the NAT feature and it will double as a peer-to-peer VPN. I'll recommend using [tailscale](https://github.com/tailscale/tailscale) or [innernet](https://github.com/tonarino/innernet) though.
 
 # Map
 - home - contains personal notes & a tcp proxy that communicates over the tunnel.
 - node - contains the tunneling software.
 
+
 # How to use
 - Run `make build` in the root repo
 - On the machine whose traffic you want to tunnel, run `make run-client` 
+- On the exit node, run  `sysctl -w net.ipv4.ip_forward=1` to enable ip forwarding.
 - On the exit node, run `make run-server`
 - And you should have your own private network pipes on the internet!  🧙‍♀️
 
