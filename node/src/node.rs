@@ -19,11 +19,11 @@ pub struct Node {
 impl Node {
     pub async fn new(cfg: Config<'static>) -> Result<Node, SubwayError> {
         let tun = TunBuilder::new()
-            .name(name)
+            .name(cfg.interface_name)
             .tap(false)
             .packet_info(true)
             .try_build()
-            .map_err(SubwayError::CreateTun)?;
+            .expect("failed to create virtual tunnel");
 
         let socket = Arc::new(
             UdpSocket::bind(cfg.tunnel_entry)

@@ -11,7 +11,7 @@ fn main() {
     });
 
     let cfg = Config {
-        rt_name: "subway",
+        route_table_name: "subway",
         rt_index: &77,
         network: "150.150.150.1/24",
         interface_name: "tun0",

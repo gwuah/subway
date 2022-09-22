@@ -3,9 +3,9 @@ use std::io;
 
 #[derive(Debug)]
 pub enum SubwayError {
-    /// Failed to bind UDP socket locally.
     BindUdp(io::Error),
     CreateTun(io::Error),
+    IOError(io::Error),
 }
 
 impl std::error::Error for SubwayError {
@@ -14,6 +14,7 @@ impl std::error::Error for SubwayError {
         match self {
             BindUdp(e) => Some(e),
             CreateTun(e) => Some(e),
+            IOError(e) => Some(e),
         }
     }
 }
@@ -24,6 +25,7 @@ impl fmt::Display for SubwayError {
         match self {
             BindUdp(_) => "Failed to bind UDP socket locally".fmt(f),
             CreateTun(_) => "Failed to create tun/tap interface".fmt(f),
+            IOError(e) => write!(f, "{}", e.to_string()),
         }
     }
 }

@@ -2,10 +2,8 @@
 Subway is a layer-3(IP) tunneling sofware. It routes all your internet traffic through an exit-node, just like how traditional vpns work, except this time, you own the exit node. 
 
 # Map
-- demo - contains a simple tcp proxy that communicates over the tunnel.
-- docs - contains notes accumulated from working on this project.
+- home - contains personal notes & a tcp proxy that communicates over the tunnel.
 - node - contains the tunneling software.
-- test - contains shell scripts and other config files for testing.
 
 # How to use
 - Run `make build` in the root repo
@@ -15,7 +13,7 @@ Subway is a layer-3(IP) tunneling sofware. It routes all your internet traffic t
 
 # Architecture
 Here's the architecture of the client node  
-![[client architecture](https://lxd.me/a-simple-vpn-tunnel-with-tun-device-demo-and-some-basic-concepts)](./docs/tunc.png)
+![[client architecture](https://lxd.me/a-simple-vpn-tunnel-with-tun-device-demo-and-some-basic-concepts)](./home/tunc.png)
 
 The server is pretty much a reverse of the client. 
 - Traffic arrives at the udp socket.

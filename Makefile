@@ -23,5 +23,5 @@ fly-sync:
 
 do-sync: 
 	make detach-target
-	cd .. && rsync -a subway/ root@<your-ip>:/root/subway
+	cd .. && rsync -a subway/ root@104.248.237.118:/root/subway
 	make attach-target
