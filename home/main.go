@@ -7,9 +7,8 @@ import (
 	"os/signal"
 )
 
-// This is shitty code, but that's only because its currently 4:28am in Accra and the guy who invented best practices is asleep.
-// So, I can do whatever I want and I decided to do LIL UZI VERT.
-// You got it? uzi vert? do what i want? HAHA im so funny
+// This is shitty code, but that's only because its currently 4:28am in Accra and the guy/girl who invented best practices is asleep.
+// So, I can do whatever I want and I decided to do LIL UZI VERT. You got it? uzi vert? do what i want? HAHA im so funny
 
 type config struct {
 	port            int

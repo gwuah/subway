@@ -21,15 +21,6 @@ pub struct Node {
     cancel: broadcast::Sender<()>,
 }
 
-impl Drop for Node {
-    fn drop(&mut self) {
-        match self.router.detach_route_table() {
-            Ok(_) => println!("routing table detached successfully"),
-            Err(e) => println!("detach RT failed. requires manual cleanup. err={}", e,),
-        }
-    }
-}
-
 impl Node {
     pub async fn new(
         cfg: Config<'static>,
@@ -88,7 +79,7 @@ impl Node {
         loop {
             // read packets from interface attached to machine
             let res = tokio::select! {
-                _ = chan.recv() => break,
+                _ = chan.recv() => {self.cleanup()?; break},
                 res = self.tun.recv(&mut packet[..]) => res,
             };
 
@@ -102,7 +93,12 @@ impl Node {
             // second 2 bytes = protocol information
             // the real packet starts at index 4
 
-            let (header, _) = Header::decode(&packet[4..size]).map_err(SubwayError::IOError)?;
+            let (header, _) = match Header::decode(&packet[4..size]) {
+                Ok(h) => h,
+                Err(_) => {
+                    continue;
+                }
+            };
 
             // handle only ipv4 packets for now
             if header.version != 4 {
@@ -110,21 +106,54 @@ impl Node {
             }
 
             let addr = (header.src_addr, header.dst_addr);
-            println!("tunneling connection from {} -> {}", addr);
+            println!("tunneling connection from {} -> {}", addr.0, addr.1);
 
             // write packet into tunnel
             let res = tokio::select! {
-                _ = chan.recv() => break,
+                _ = chan.recv() => {self.cleanup()?; break},
                 res = self.socket.send_to(&packet[..size], self.cfg.tunnel_exit) => res,
             };
             let len = res.map_err(SubwayError::IOError)?;
-            println!("wrote {} bytes to {}\n", len, self.cfg.tunnel_exit)
+            println!("wrote {} bytes to {}\n", len, self.cfg.tunnel_exit);
         }
 
         Ok(())
     }
 
     pub async fn read_tunnel_write_interface(&self) -> Result<(), SubwayError> {
+        let mut packet = vec![0; MAX_FRAME_SIZE];
+        let mut chan = self.cancel.subscribe();
+        loop {
+            let res = tokio::select! {
+                _ = chan.recv() => {self.cleanup()?; break},
+                res = self.socket.recv_from(&mut packet) => res,
+            };
+            let (len, addr) = res.map_err(SubwayError::IOError)?;
+            println!(
+                "{} bytes received from {}",
+                len.to_string(),
+                addr.to_string()
+            );
+
+            let res = tokio::select! {
+                _ = chan.recv() => {self.cleanup()?; break},
+                res = self.tun.send(&mut packet[..len]) => res,
+            };
+            let len = res.map_err(SubwayError::IOError)?;
+            println!("wrote {} bytes to the tun interface for routing\n", len);
+        }
+
         Ok(())
+    }
+
+    pub fn cleanup(&self) -> Result<(), SubwayError> {
+        Ok({
+            if self.router.route_table_exists()? {
+                match self.router.detach_route_table() {
+                    Ok(_) => println!("routing table detached successfully"),
+                    Err(e) => println!("detach RT failed. requires manual cleanup. err={}", e,),
+                }
+            }
+        })
     }
 }

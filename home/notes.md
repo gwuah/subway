@@ -31,6 +31,7 @@ iptables -L -n -v -t nat --line-numbers
 tail -f /var/log/syslog  
 10.0.0.0/8,172.16.0.0/12 and 192.168.0.0/16  
 sysctl net.ipv4.conf.all.rp_filter=0  
+dropwatch -lkas
 ```
 iptables-save | awk '/^[*]/ { print $1 } 
                      /^:[A-Z]+ [^-]/ { print $1 " ACCEPT" ; }

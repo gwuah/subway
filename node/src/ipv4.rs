@@ -36,8 +36,8 @@ impl Header {
     pub fn decode(buf: &[u8]) -> io::Result<(Self, &[u8])> {
         let mut cursor = io::Cursor::new(buf);
         let version_and_ihl = cursor.read_u8()?;
-        let version = version_and_ihl & 0xF;
-        let internet_header_len = version_and_ihl >> 4;
+        let version = version_and_ihl >> 4;
+        let internet_header_len = version_and_ihl & 0xF;
         let type_of_service = cursor.read_u8()?;
         let datagram_len = cursor.read_u16::<NetworkEndian>()?;
         let id = cursor.read_u16::<NetworkEndian>()?;

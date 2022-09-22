@@ -5,7 +5,7 @@ use std::fs::{self, OpenOptions};
 use std::io::Write;
 use std::process::Command;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct Router {
     cfg: Config<'static>,
 }
@@ -32,7 +32,7 @@ impl Router {
         Ok(())
     }
 
-    fn route_table_exists(&self) -> Result<bool, SubwayError> {
+    pub fn route_table_exists(&self) -> Result<bool, SubwayError> {
         let data = fs::read_to_string("/etc/iproute2/rt_tables").map_err(SubwayError::IOError)?;
         Ok(data.contains(self.cfg.route_table_name))
     }
