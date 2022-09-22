@@ -15,6 +15,23 @@ impl Router {
         return Router { cfg };
     }
 
+    pub fn configure_nat_rules(&self) -> Result<(), SubwayError> {
+        let _ = Command::new("iptables")
+            .args(&[
+                "-t",
+                "nat",
+                "-A",
+                "POSTROUTING",
+                "-s",
+                self.cfg.network,
+                "-j",
+                "MASQUERADE",
+            ])
+            .output()
+            .map_err(SubwayError::IOError)?;
+        Ok(())
+    }
+
     fn route_table_exists(&self) -> Result<bool, SubwayError> {
         let data = fs::read_to_string("/etc/iproute2/rt_tables").map_err(SubwayError::IOError)?;
         Ok(data.contains(self.cfg.route_table_name))

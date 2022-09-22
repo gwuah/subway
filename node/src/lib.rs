@@ -1,5 +1,6 @@
 pub mod config;
 pub mod errors;
+pub mod ipv4;
 pub mod node;
 pub mod routing;
 
